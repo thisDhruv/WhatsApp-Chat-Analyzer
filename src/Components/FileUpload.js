@@ -1,32 +1,30 @@
 import React, { useEffect } from "react";
 export const FileUpload = (props) => {
-    const read = new FileReader();
-    let setFileContent = props.setFileContent;
+  const read = new FileReader();
+  let setFileContent = props.setFileContent;
 
-    
-    useEffect(() => {
-        let fileInput = document.getElementById("dropzone-file");
-        // eslint-disable-next-line
-        fileInput.onchange = () => {
-            const selectedFile = fileInput.files[0];
-            if (selectedFile == null) return;
-            read.readAsText(selectedFile);
-            read.onloadend = function () {
-              setFileContent(read.result);
-            };
-          };
-        
-    },[])
+  useEffect(() => {
+    let fileInput = document.getElementById("dropzone-file");
+    // eslint-disable-next-line
+    fileInput.onchange = () => {
+      const selectedFile = fileInput.files[0];
+      if (selectedFile == null) return;
+      read.readAsText(selectedFile);
+      read.onloadend = function () {
+        setFileContent(read.result);
+      };
+    };
+  }, []);
 
   return (
     <>
-    <h2 className="text-4xl text-right m-5 font-extrabold dark:text-white">
-        Upload the exported txt file:
+      <h2 className="text-4xl text-right m-5 font-extrabold dark:text-white">
+        Select the exported txt file:
       </h2>
       <div className="flex items-center justify-center w-full">
         <label
           htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          className="flex flex-col items-center justify-center w-full h-23 mb-5 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg
@@ -45,17 +43,15 @@ export const FileUpload = (props) => {
               ></path>
             </svg>
             <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-              <span className="font-semibold">Click to upload</span> or drag and
-              drop
+              <span className="font-semibold">Click to upload</span>
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              txt file from whatsapp
+              Exported txt file from whatsapp
             </p>
           </div>
-          <input id="dropzone-file" type="file" className="hidden"/>
+          <input id="dropzone-file" type="file" className="hidden" />
         </label>
       </div>
-
     </>
   );
 };
