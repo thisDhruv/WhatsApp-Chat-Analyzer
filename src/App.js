@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import "./App.css";
+import { FileUpload } from "./Components/FileUpload";
+import { NavBar } from "./Components/NavBar";
+import { Stats } from "./Components/Stats";
 function App() {
+  const [fileContent, setFileContent] = useState("None");
+  // document.documentElement.classList.add('dark');
+  // document.body.style.backgroundColor="#1f1f60";
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavBar />
+      <div className="container flex flex-row mx-auto w-full">
+        <FileUpload setFileContent={setFileContent} />
+      </div>
+      {<Stats fileContent={fileContent} />}
+
+      
+    </>
   );
 }
 

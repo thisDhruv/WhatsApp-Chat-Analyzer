@@ -6,10 +6,18 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "chart.js": "^4.2.1",
+    "emoji-regex": "^10.2.1",
+    "flowbite": "^1.6.4",
+    "flowbite-react": "^0.4.2",
+    "fs": "^0.0.1-security",
+    "node-fs": "^0.1.7",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "whatsapp-chat-parser": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -34,5 +42,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
+  },
+  "browser": {
+    "fs": false,
+    "os": false,
+    "path": false
   }
 }
