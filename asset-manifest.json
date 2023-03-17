@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/WhatsApp-Chat-Analyzer/static/css/main.502854d9.css",
-    "main.js": "/WhatsApp-Chat-Analyzer/static/js/main.e87e5058.js",
+    "main.js": "/WhatsApp-Chat-Analyzer/static/js/main.09b68864.js",
     "static/js/787.d3998aa4.chunk.js": "/WhatsApp-Chat-Analyzer/static/js/787.d3998aa4.chunk.js",
     "index.html": "/WhatsApp-Chat-Analyzer/index.html",
     "main.502854d9.css.map": "/WhatsApp-Chat-Analyzer/static/css/main.502854d9.css.map",
-    "main.e87e5058.js.map": "/WhatsApp-Chat-Analyzer/static/js/main.e87e5058.js.map",
+    "main.09b68864.js.map": "/WhatsApp-Chat-Analyzer/static/js/main.09b68864.js.map",
     "787.d3998aa4.chunk.js.map": "/WhatsApp-Chat-Analyzer/static/js/787.d3998aa4.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.502854d9.css",
-    "static/js/main.e87e5058.js"
+    "static/js/main.09b68864.js"
   ]
 }
