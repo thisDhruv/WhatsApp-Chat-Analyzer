@@ -3,9 +3,21 @@ import * as whatsapp from "whatsapp-chat-parser";
 import { BarChart } from "./BarChart";
 import { LineChart } from "./LineChart";
 
-
 const emojiRegex = /[\u{1f300}-\u{1f5ff}\u{1f900}-\u{1f9ff}\u{1f600}-\u{1f64f}\u{1f680}-\u{1f6ff}\u{2600}-\u{26ff}\u{2700}-\u{27bf}\u{1f1e6}-\u{1f1ff}\u{1f191}-\u{1f251}\u{1f004}\u{1f0cf}\u{1f170}-\u{1f171}\u{1f17e}-\u{1f17f}\u{1f18e}\u{3030}\u{2b50}\u{2b55}\u{2934}-\u{2935}\u{2b05}-\u{2b07}\u{2b1b}-\u{2b1c}\u{3297}\u{3299}\u{303d}\u{00a9}\u{00ae}\u{2122}\u{23f3}\u{24c2}\u{23e9}-\u{23ef}\u{25b6}\u{23f8}-\u{23fa}]/gu;
-const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 function random_rgba() {
   var o = Math.round,
@@ -15,43 +27,43 @@ function random_rgba() {
     "rgba(" + o(r() * s) + "," + o(r() * s) + "," + o(r() * s) + "," + 1 + ")"
   );
 }
-function generateAllMonthsInMap(map,firstMonth,lastMonth){
-    let temp=firstMonth.split(",");
-    let ind = months.indexOf(firstMonth.split(",")[0]);
-    let curr = firstMonth;
-    let year = parseInt(temp[1].substring(1));
-    while(curr!==lastMonth){
-        // console.log(curr);
-        if(!map.has(curr)){
-            map.set(curr,0);
-        }
-        ind++;
-        if(ind==12){
-            ind=0;
-            year++;
-        }
-        curr = months[ind]+", "+year;
+function generateAllMonthsInMap(map, firstMonth, lastMonth) {
+  let temp = firstMonth.split(",");
+  let ind = months.indexOf(firstMonth.split(",")[0]);
+  let curr = firstMonth;
+  let year = parseInt(temp[1].substring(1));
+  while (curr !== lastMonth) {
+    // console.log(curr);
+    if (!map.has(curr)) {
+      map.set(curr, 0);
     }
+    ind++;
+    if (ind == 12) {
+      ind = 0;
+      year++;
+    }
+    curr = months[ind] + ", " + year;
+  }
 }
-function makeArrayAndSortWithKey(map){
+function makeArrayAndSortWithKey(map) {
   let arr = [];
   for (let [key, value] of map) {
     arr.push([key, value]);
   }
   arr.sort(function (a, b) {
-    let ai=a[0].indexOf(",");
+    let ai = a[0].indexOf(",");
     let bi = b[0].indexOf(",");
-    let ayear = a[0].substring(ai+1);
-    let amonth = a[0].substring(0,ai);
-    let byear=b[0].substring(bi+1);
-    let bmonth = b[0].substring(0,bi);
+    let ayear = a[0].substring(ai + 1);
+    let amonth = a[0].substring(0, ai);
+    let byear = b[0].substring(bi + 1);
+    let bmonth = b[0].substring(0, bi);
 
-    if(ayear!==byear){
-        return parseInt(ayear)-parseInt(byear)
-    }else{
-        return months.indexOf(amonth)-months.indexOf(bmonth)
+    if (ayear !== byear) {
+      return parseInt(ayear) - parseInt(byear);
+    } else {
+      return months.indexOf(amonth) - months.indexOf(bmonth);
     }
-  })
+  });
   return arr;
 }
 
@@ -75,11 +87,10 @@ function sliceIntoChunks(arr, chunkSize) {
 }
 
 export const Stats = (props) => {
-    
   const file = props.fileContent;
   let messageWhole = whatsapp.parseString(file);
   let messagesChunks = sliceIntoChunks(messageWhole, 3000);
-//   console.log(messagesChunks);
+  //   console.log(messagesChunks);
   let alldone = false;
   //All Stats Variables
   let userStats = new Map();
@@ -118,7 +129,32 @@ export const Stats = (props) => {
   let linkFreqPerUser = [];
   let linkFreqPerUserObjArray = []; //contains objs for each user with labels and values
   let weekWiseMessage = [0, 0, 0, 0, 0, 0, 0];
-  let messagesPerHour = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  let messagesPerHour = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+  ];
   let allMonthsWithFreqMap = new Map();
   let wordsFreqMap = new Map();
   let linkFreqMap = new Map();
@@ -134,7 +170,7 @@ export const Stats = (props) => {
   //actual processing of all chunks
   for (let chunk = 0; chunk < messagesChunks.length; chunk++) {
     // setTimeout(processData(messagesChunks[chunk]), 2);
-    processData(messagesChunks[chunk])
+    processData(messagesChunks[chunk]);
     if (chunk === messagesChunks.length - 1) {
       finalizeData();
     }
@@ -163,25 +199,24 @@ export const Stats = (props) => {
         }
 
         let date = new Date(msgobj.date);
-
-        if(totalMessages==0){
-            //it is the first message, load the first month date
-            firstMonth = months[date.getMonth()]+", "+date.getUTCFullYear();
+        if (totalMessages == 0) {
+          //it is the first message, load the first month date
+          firstMonth = months[date.getMonth()] + ", " + date.getFullYear();
         }
-        lastMonth = months[date.getMonth()]+", "+date.getUTCFullYear();
+        lastMonth = months[date.getMonth()] + ", " + date.getFullYear();
         // console.log(date.getDay() + " " + date.getUTCMonth() + " "+date.getUTCFullYear());
         //weekmsg++
         weekWiseMessage[date.getDay()]++;
         messagesPerHour[date.getHours()]++;
 
         //monthYear ++
-        let monthString = months[date.getMonth()]+", "+date.getUTCFullYear();
+        let monthString = months[date.getMonth()] + ", " + date.getFullYear();
         if (!allMonthsWithFreqMap.has(monthString)) {
-            allMonthsWithFreqMap.set(monthString, 0);
+          allMonthsWithFreqMap.set(monthString, 0);
         }
-          allMonthsWithFreqMap.set(
-            monthString,
-            allMonthsWithFreqMap.get(monthString) + 1
+        allMonthsWithFreqMap.set(
+          monthString,
+          allMonthsWithFreqMap.get(monthString) + 1
         );
 
         let authorStats = userStats.get(msgobj.author); //for easy
@@ -189,7 +224,7 @@ export const Stats = (props) => {
         authorStats.messages += 1;
         totalMessages++;
         if (msgobj.message === "<Media omitted>") {
-            totalFiles++;
+          totalFiles++;
           authorStats.files += 1;
           continue;
         }
@@ -206,34 +241,30 @@ export const Stats = (props) => {
           try {
             //
             let theUrl = new URL(word);
-            if(theUrl.protocol==="https:" || theUrl.protocol==="http:"){
-            
-            //
-            let domain = theUrl.hostname.replace("www.", "");
-            authorStats.links += 1;
-            // mostUsedLinks set for this user object
-            if (!authorStats.mostUsedLinks.has(domain)) {
-              authorStats.mostUsedLinks.set(domain, 0);
-            }
-            authorStats.mostUsedLinks.set(
-              domain,
-              authorStats.mostUsedLinks.get(domain) + 1
-            );
-
-            //mostUsedLinks setting up for all
-            if (!linkFreqMap.has(domain)) {
-                linkFreqMap.set(domain, 0);
+            if (theUrl.protocol === "https:" || theUrl.protocol === "http:") {
+              //
+              let domain = theUrl.hostname.replace("www.", "");
+              authorStats.links += 1;
+              // mostUsedLinks set for this user object
+              if (!authorStats.mostUsedLinks.has(domain)) {
+                authorStats.mostUsedLinks.set(domain, 0);
               }
-              linkFreqMap.set(
+              authorStats.mostUsedLinks.set(
                 domain,
-                linkFreqMap.get(domain) + 1
+                authorStats.mostUsedLinks.get(domain) + 1
               );
 
-                // console.log(domain+" -> "+word);
-            
-            totalLinks++;
-            }else{
-                isLink = false;
+              //mostUsedLinks setting up for all
+              if (!linkFreqMap.has(domain)) {
+                linkFreqMap.set(domain, 0);
+              }
+              linkFreqMap.set(domain, linkFreqMap.get(domain) + 1);
+
+              // console.log(domain+" -> "+word);
+
+              totalLinks++;
+            } else {
+              isLink = false;
             }
           } catch (e) {
             isLink = false;
@@ -310,30 +341,27 @@ export const Stats = (props) => {
       linksperuser.values.push(value.links);
 
       emojiFreqPerUser.push(makeArrayAndSortWithValues(value.mostUsedEmojis));
-      
+
       //initialize emoji array obj with users size
       emojiFreqPerUserObjArray.push({
         labels: [],
         values: [],
       });
 
-      
-        linkFreqPerUser.push(makeArrayAndSortWithValues(value.mostUsedLinks));
+      linkFreqPerUser.push(makeArrayAndSortWithValues(value.mostUsedLinks));
 
-         //initialize Links Array obj with users size
-            linkFreqPerUserObjArray.push({
-                labels: [],
-                values: [],
-            });
-      
-     
-
+      //initialize Links Array obj with users size
+      linkFreqPerUserObjArray.push({
+        labels: [],
+        values: [],
+      });
 
       //make random color for each user
       userColors.push(random_rgba());
       users.push(key);
     }
 
+    //calc wordsFreqMap irrespective of user, ie all words freq
     let wordFreqArray = makeArrayAndSortWithValues(wordsFreqMap);
 
     for (let k = 0; k < 25; k++) {
@@ -342,12 +370,13 @@ export const Stats = (props) => {
       WordFreqObj.values.push(arr[1]);
     }
 
+    //calc linkFreqArray irrespective of user, ie all links freq
     let linkFreqArray = makeArrayAndSortWithValues(linkFreqMap);
-    for (let k = 0; k < Math.min(35,linkFreqArray.length); k++) {
-        let arr = linkFreqArray[k];
-        linkFreqObj.labels.push(arr[0]);
-        linkFreqObj.values.push(arr[1]);
-      }
+    for (let k = 0; k < Math.min(35, linkFreqArray.length); k++) {
+      let arr = linkFreqArray[k];
+      linkFreqObj.labels.push(arr[0]);
+      linkFreqObj.values.push(arr[1]);
+    }
 
     //calc emoji per user
     for (let u = 0; u < emojiFreqPerUser.length; u++) {
@@ -358,22 +387,22 @@ export const Stats = (props) => {
     }
     //calc links per user
     for (let u = 0; u < linkFreqPerUser.length; u++) {
-        for (let ku = 0; ku < Math.min(6, linkFreqPerUser[u].length); ku++) {
-          linkFreqPerUserObjArray[u].labels.push(linkFreqPerUser[u][ku][0]);
-          linkFreqPerUserObjArray[u].values.push(linkFreqPerUser[u][ku][1]);
-        }
+      for (let ku = 0; ku < Math.min(6, linkFreqPerUser[u].length); ku++) {
+        linkFreqPerUserObjArray[u].labels.push(linkFreqPerUser[u][ku][0]);
+        linkFreqPerUserObjArray[u].values.push(linkFreqPerUser[u][ku][1]);
       }
-
-      generateAllMonthsInMap(allMonthsWithFreqMap,firstMonth,lastMonth);
-
-    //calc all months messages frequency 
-    let allMonthsWithFreqArray = makeArrayAndSortWithKey(allMonthsWithFreqMap);
-    for (let k = 0; k < allMonthsWithFreqArray.length; k++) {
-        let arr = allMonthsWithFreqArray[k];
-        allMonthsWithFreqObj.labels.push(arr[0]);
-        allMonthsWithFreqObj.values.push(arr[1]);
     }
 
+    //add those months also which are not in txt file because of zero messages in that month
+    generateAllMonthsInMap(allMonthsWithFreqMap, firstMonth, lastMonth);
+
+    //calc all months messages frequency
+    let allMonthsWithFreqArray = makeArrayAndSortWithKey(allMonthsWithFreqMap);
+    for (let k = 0; k < allMonthsWithFreqArray.length; k++) {
+      let arr = allMonthsWithFreqArray[k];
+      allMonthsWithFreqObj.labels.push(arr[0]);
+      allMonthsWithFreqObj.values.push(arr[1]);
+    }
 
     alldone = true;
   }
@@ -383,30 +412,61 @@ export const Stats = (props) => {
 
   return (
     <>
-      { (
+      {
         <>
-
-        {alldone &&
+          {alldone && (
             <div className="container px-100 mx-auto text-center w-1/2">
-
-            <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Overall:</h2>
-
-                    <span class=" text-center font-semibold text-gray-900 dark:text-white">{totalMessages}</span> is the total number of <span class="font-semibold text-gray-900 dark:text-white">Messages</span> in the conversation
-               <br/>
-                    <span class=" text-center font-semibold text-gray-900 dark:text-white">{totalWords}</span> is the total number of <span class="font-semibold text-gray-900 dark:text-white">Words</span> in the conversation
-                    <br/>
-                    <span class="text-center font-semibold text-gray-900 dark:text-white">{totalEmojis}</span> is the total number of <span class="font-semibold text-gray-900 dark:text-white">Emojis</span> in the conversation
-                    <br/>
-                    <span class="text-center font-semibold text-gray-900 dark:text-white">{totalFiles}</span> is the total number of <span class="font-semibold text-gray-900 dark:text-white">Files</span> in the conversation
-                    <br/>
-                    <span class="text-center font-semibold text-gray-900 dark:text-white">{totalLinks}</span> is the total number of <span class="font-semibold text-gray-900 dark:text-white">Links</span> in the conversation
-
-
+              <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+                Overall:
+              </h2>
+              <span class=" text-center font-semibold text-gray-900 dark:text-white">
+                {totalMessages}
+              </span>{" "}
+              is the total number of{" "}
+              <span class="font-semibold text-gray-900 dark:text-white">
+                Messages
+              </span>{" "}
+              in the conversation
+              <br />
+              <span class=" text-center font-semibold text-gray-900 dark:text-white">
+                {totalWords}
+              </span>{" "}
+              is the total number of{" "}
+              <span class="font-semibold text-gray-900 dark:text-white">
+                Words
+              </span>{" "}
+              in the conversation
+              <br />
+              <span class="text-center font-semibold text-gray-900 dark:text-white">
+                {totalEmojis}
+              </span>{" "}
+              is the total number of{" "}
+              <span class="font-semibold text-gray-900 dark:text-white">
+                Emojis
+              </span>{" "}
+              in the conversation
+              <br />
+              <span class="text-center font-semibold text-gray-900 dark:text-white">
+                {totalFiles}
+              </span>{" "}
+              is the total number of{" "}
+              <span class="font-semibold text-gray-900 dark:text-white">
+                Files
+              </span>{" "}
+              in the conversation
+              <br />
+              <span class="text-center font-semibold text-gray-900 dark:text-white">
+                {totalLinks}
+              </span>{" "}
+              is the total number of{" "}
+              <span class="font-semibold text-gray-900 dark:text-white">
+                Links
+              </span>{" "}
+              in the conversation
             </div>
-            }
+          )}
 
-
-          <div className='grid md:grid-cols-2 gap-4 container mx-auto px-100 grid-cols-1'>
+          <div className="grid md:grid-cols-2 gap-4 container mx-auto px-100 grid-cols-1">
             <div className="grid content-center">
               <BarChart
                 data={messagesperuser}
@@ -460,67 +520,98 @@ export const Stats = (props) => {
               })}
             </div>
             <div className="grid md:grid-cols-2 gap-3 container mx-auto px-100 grid-cols-1">
-            <div>
-            <LineChart
-              data={{
-                labels: [
-                  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-                ],
-                values: weekWiseMessage,
-              }}
-              userColors={["rgba(255,0,255,1)"]}
-              title = {"Weekly Messages"}
-              label = {"Weekly Messages"}
-            />
+              <div>
+                <LineChart
+                  data={{
+                    labels: [
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ],
+                    values: weekWiseMessage,
+                  }}
+                  userColors={["rgba(255,0,255,1)"]}
+                  title={"Weekly Messages"}
+                  label={"Weekly Messages"}
+                />
+              </div>
+              <div>
+                <LineChart
+                  data={{
+                    labels: [
+                      0,
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9,
+                      10,
+                      11,
+                      12,
+                      13,
+                      14,
+                      15,
+                      16,
+                      17,
+                      18,
+                      19,
+                      20,
+                      21,
+                      22,
+                      23,
+                    ],
+                    values: messagesPerHour,
+                  }}
+                  userColors={["rgba(0,0,255,1)"]}
+                  title={"Messages Per Hour of the day"}
+                  label={"Messages per hour"}
+                />
+              </div>
             </div>
-            <div>
-            <LineChart
-              data={{
-                labels: [
-                  0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
-                ],
-                values: messagesPerHour
-              }}
-              userColors={["rgba(0,0,255,1)"]}
-              title = {"Messages Per Hour of the day"}
-              label = {"Messages per hour"}
-            />
-            </div>
-            </div>
-            
+
             <LineChart
               data={allMonthsWithFreqObj}
               userColors={["rgba(0,255,0,1)"]}
-              title = {"Montly Messages"}
-              label = {"Monthly Messages"}
+              title={"Montly Messages"}
+              label={"Monthly Messages"}
             />
-             <BarChart
-                data={linkFreqObj}
-                userColors={["rgba(0,0,255,1)"]}
-                title={"Most Linked Websites"}
-                label={"Links Frequency"}
-                />
+            <BarChart
+              data={linkFreqObj}
+              userColors={["rgba(0,0,255,1)"]}
+              title={"Most Linked Websites"}
+              label={"Links Frequency"}
+            />
           </div>
 
-
           <div className="grid md:grid-cols-3 gap-1 container mx-auto px-100 grid-cols-1">
-              {linkFreqPerUserObjArray.map((obj) => {
-                if(obj.labels.length===0){uid2++;return(<></>);}
-                return (
-                  <div className="content-center">
-                    <BarChart
-                      data={obj}
-                      userColors={userColors[uid2]}
-                      title={"Most Shared Websites by - " + users[uid2++]}
-                      label={"Link Frequency"}
-                      key={uid2}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+            {linkFreqPerUserObjArray.map((obj) => {
+              if (obj.labels.length === 0) {
+                uid2++;
+                return <></>;
+              }
+              return (
+                <div className="content-center">
+                  <BarChart
+                    data={obj}
+                    userColors={userColors[uid2]}
+                    title={"Most Shared Websites by - " + users[uid2++]}
+                    label={"Link Frequency"}
+                    key={uid2}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </>
-      )}
+      }
     </>
   );
 };
